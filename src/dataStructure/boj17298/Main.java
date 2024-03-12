@@ -8,40 +8,40 @@ import java.util.Stack;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         int count = Integer.parseInt(br.readLine());
 
-        String[] nums = br.readLine().split(" ");
+        Integer[] nums = new Integer[count];
 
-        Integer[] ans = new Integer[count];
         Stack<Integer> stack = new Stack<>();
 
-        for (String num : nums) {
-            stack.push(Integer.parseInt(num));
+        String[] s = br.readLine().split(" ");
+        for (int i = 0; i < count; i++) {
+            nums[i] = Integer.parseInt(s[i]);
         }
 
-        Stack<Integer> resultStack = new Stack<>();
-        resultStack.push(-1); // 초기값 설정
-
-        for (int i = count - 1; i >= 0; i--) {
-            try {
-                while (stack.peek() >= resultStack.peek()) {
-                    resultStack.pop();
-                }
-                ans[i] = resultStack.peek();
-            } catch (java.util.EmptyStackException e) {
-                ans[i] = -1;
+        for (int j = 0; j < count; j++) {
+            while (!stack.isEmpty() && nums[stack.peek()] < nums[j]) {
+                nums[stack.pop()] = nums[j];
             }
+            stack.push(j);
+        }
 
-            resultStack.push(stack.pop());
+        while (!stack.empty()) {
+            nums[stack.pop()] = -1;
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int j = 0; j < ans.length; j++) {
-            sb.append(ans[j]).append(' ');
+        for (Integer num : nums) {
+            sb.append(num).append(" ");
         }
+
         System.out.println(sb);
+
+
     }
 }
+
 /**
  * import java.io.BufferedReader;
  * import java.io.IOException;
