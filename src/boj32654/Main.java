@@ -38,21 +38,27 @@ public class Main {
         }
     }
 
-    public static int checkNodeContainOne(int n, Node node) {
+    public static int checkNodeContainOne(int n, Node node) { //1을 포함한 순환 참조라면 -1, 1이 없으면 0, 1이 있는데 순환참조가 아닌경우: 1이 나오기 전까지 깊이를 계산
         Node currentNode = node;
-        if (currentNode.value == 1) {
-            return -1;
-        }
         int depth = 0;
+        boolean circular = false;
+        boolean metOne = false;
         for (int i = 0; i < n; i++) {
-            if (currentNode == null) {
-                return depth;
+            if (i != 0 && currentNode == node) {
+                circular = true;
             }
             if (currentNode.value == 1) {
-                return depth;
+                metOne = true;
             }
             currentNode = currentNode.next;
             depth++;
+        }
+
+        if (circular && metOne) {
+            return -1;
+        }
+        if (!metOne && circular) {
+            return 0;
         }
         return depth;
     }
