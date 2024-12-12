@@ -15,9 +15,11 @@ public class Main {
             original.add(n);
         }
 
-        int count;
+        int count; //최고 카운트
         Integer before;
         Integer answer = 0;
+        int max = 0; //현재 연속되는 숫자
+        int maxLine = 0; //연속되고 있는 정도
         for (Integer integer : nums) {
             count = 1;
             before = 0;
@@ -25,7 +27,14 @@ public class Main {
             copy.removeAll(List.of(integer));
             for (Integer i : copy) {
                 if (before.equals(i)) {
-                    count++;
+                    maxLine++;
+                    if (count < maxLine) {
+                        count = maxLine;
+                    }
+                    max = i;
+                } else {
+                    max = i;
+                    maxLine = 1;
                 }
                 before = i;
             }
