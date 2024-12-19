@@ -24,13 +24,14 @@ public class Main {
             list.add(sc.nextInt());
         }
 
-        Collections.sort(list); // 내림차순으로 해서 거꾸로 계산해야했음
+        Collections.sort(list);
+        Collections.reverse(list);
 
         int iter = list.size() / 3;
         int remain = list.size() % 3;
 
         for (int i = 1; i <= iter; i++) {
-            int i1 = i * 3 - 1;
+            int i1 = i * 3 - 2;
             result += list.get(i1) + (list.get(i1 - 1));
         }
 
