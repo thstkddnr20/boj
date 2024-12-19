@@ -34,22 +34,28 @@ public class Main {
     }
 
     private static int getWrongPoint(int nStart, int mStart, String[][] chess) {
-        int wrongPoint = 0;
 
-        for (int i = nStart; i < nStart + 8; i += 2) {
-            for (int j = mStart; j < mStart + 8; j = j + 2) {
+        int first = findWrong(nStart, mStart, chess, "B");
+        int second = findWrong(nStart, mStart, chess, "W");
+        return Math.min(first, second);
+    }
+
+    private static int findWrong(int nStart, int mStart, String[][] chess, String start) {
+        int wrongPoint = 0;
+        for (int i = nStart; i < nStart + 8; i++) {
+            for (int j = mStart; j < mStart + 8; j++) {
                 String current = chess[i][j];
 
-                if (i + 1 < nStart + 8) { //아래 비교
-                    String down = chess[i + 1][j];
-                    if (down.equals(current)) {
+                if (i % 2 == 0 && j % 2 == 0) {
+                    if (!current.equals(start)) {
                         wrongPoint++;
                     }
-                }
-
-                if (j + 1 < mStart + 8) { //오른쪽 비교
-                    String right = chess[i][j + 1];
-                    if (right.equals(current)) {
+                } else if (i % 2 != 0 && j % 2 != 0) {
+                    if (!current.equals(start)) {
+                        wrongPoint++;
+                    }
+                } else {
+                    if (current.equals(start)) {
                         wrongPoint++;
                     }
                 }
