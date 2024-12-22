@@ -1,4 +1,4 @@
-package boj2805;
+package search.binary.boj2805;
 
 import java.util.*;
 
