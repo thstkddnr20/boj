@@ -26,32 +26,38 @@ public class Main {
     }
 
     public static int binarySearch(int N) {
-        int start = 0;
-        int end = max;
+        long start = 1;
+        long end = max;
         int candidate = 0;
 
-        while (start < end) {
-            int mid = start / 2 + end / 2;
+        while (start <= end) {
+
+            long mid = (start + end) / 2;
+            int intMid = (int) mid;
             //mid를 이용하여 cut 진행
             int count = 0; //잘라진 랜선의 수
             for (int i = 0; i < arr.length; i++) {
-                count += cut(arr[i], mid);
+                count += cut(arr[i], intMid);
             }
 
-            if (count == N) {
-                candidate = mid;
-                start = mid + 1;
-            } else if (count > N) {
-                start = mid + 1;
+            if (count >= N) {
+                candidate = intMid;
+                if (start == end) {
+                    return candidate;
+                }
+                start = intMid + 1;
             } else {
-                end = mid;
+                if (start == end) {
+                    return candidate;
+                }
+                end = intMid;
             }
+
+
         }
 
-        if (candidate == 0) {
-            return start / 2 + end / 2;
-        }
-        
+
+
         return candidate;
     }
 
