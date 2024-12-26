@@ -1,4 +1,4 @@
-package search.boj1260;
+package search.dfsbfs.boj1260;
 
 import java.util.*;
 
