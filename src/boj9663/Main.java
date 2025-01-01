@@ -3,19 +3,14 @@ package boj9663;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
+//2중 for문으로 모든 경우 탐색할 때의 문제점 : 체스판이 중복될 수 있다 (기존에 만든 체스판과 같은 결과가 나올 수 있음) -> 정답보다 큰 값이 나옴
+//해결방법 : for문을 1개만 써서 행 단위로 검사 진행
 public class Main {
     static int N;
     static int[][] board; //체스판
     static boolean[][] placed; //체스판에 말을 놓을 수 있는가(체스판을 되돌릴때 중복되는 부분이 있어 문제가 됨) -> Queen이 놓여진 자리로 변경
     static int result = 0;
-
-    static int dx[] = { 1, -1, 1, -1 };
-    static int dy[] = { 1, 1, -1, -1 };
-
-    static int sx[] = { 1, -1, 0, 0 };
-    static int sy[] = { 0, 0, 1, -1 };
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -56,26 +51,46 @@ public class Main {
             return true;
         }
 
-        while (x >= 0 && x < N && y >= 0 && y < N) {
-            for (int i = 0; i < N; i++) {
-                if (placed[x][i]) {
-                    return false;
-                }
-            }
 
-            for (int i = 0; i < N; i++) {
-                if (placed[i][y]) {
-                    return false;
-                }
-            }
-
-            //대각
-            for (int i = 0; i < N; i++) {
-                if (placed[x - i][y - i]) {
-
-                }
+        for (int i = 0; i < N; i++) {
+            if (placed[x][i]) {
+                return false;
             }
         }
+        for (int i = 0; i < N; i++) {
+            if (placed[i][y]) {
+                return false;
+            }
+        }
+
+
+        //대각
+        for (int i = 0; i < N; i++) {
+            if (x - i >= 0 && y - i >= 0) {
+                if (placed[x - i][y - i]) {
+                    return false;
+                }
+            }
+            if (y + i < N && x - i >= 0) {
+                if (placed[x - i][y + i]) {
+                    return false;
+                }
+            }
+            if (x + i < N && y - i >= 0) {
+                if (placed[x + i][y - i]) {
+                    return false;
+                }
+            }
+            if (x + i < N && y + i < N) {
+                if (placed[x + i][y + i]) {
+                    return false;
+                }
+            }
+
+        }
+
+
+        return true;
 
         
         //queen과 같은 x, y면 안됨
