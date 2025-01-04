@@ -32,7 +32,7 @@ public class Main {
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (possible(i, j, number)) { //queen이 놓여져있지 않고, 다른 queen에 의해 잡히지 않는 곳이라면
+                if (possible(i, j)) { //queen이 놓여져있지 않고, 다른 queen에 의해 잡히지 않는 곳이라면
                     placed[i][j] = true; //queen을 놓고
 
                     //queen을 놓고 number을 증가시켜 재귀
@@ -45,12 +45,34 @@ public class Main {
 
     }
 
-    static boolean possible(int x, int y, int queenNum) {
+    static boolean possible(int x, int y) {
         //queen이 놓여진 체스판 placed와 x, y를 비교하여 말을 놓을 수 있는 자리인지 파악
-        if (queenNum == 0) { //놓여진 queen이 없다면
-            return true;
+
+        //마지막으로 queen이 놓여진 부분보다 x,y가 커야함
+        Integer queenX = null;
+        Integer queenY = null;
+
+        loop1:
+        for (int i = N - 1; i >= 0; i--) {
+            for (int j = N - 1; j >= 0; j--) {
+                if (placed[i][j]) {
+                    queenX = i;
+                    queenY = j;
+                    break loop1;
+                }
+            }
         }
 
+        if (queenX != null) {
+            if (x < queenX) {
+                return false;
+            }
+            else if (x == queenX){
+                if (y < queenY) {
+                    return false;
+                }
+            }
+        }
 
         for (int i = 0; i < N; i++) {
             if (placed[x][i]) {
