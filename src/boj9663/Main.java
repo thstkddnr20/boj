@@ -4,119 +4,51 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-//2중 for문으로 모든 경우 탐색할 때의 문제점 : 체스판이 중복될 수 있다 (기존에 만든 체스판과 같은 결과가 나올 수 있음) -> 정답보다 큰 값이 나옴
-//해결방법 : for문을 1개만 써서 행 단위로 검사 진행
 public class Main {
+    static int[] arr;
     static int N;
-    static int[][] board; //체스판
-    static boolean[][] placed; //체스판에 말을 놓을 수 있는가(체스판을 되돌릴때 중복되는 부분이 있어 문제가 됨) -> Queen이 놓여진 자리로 변경
-    static int result = 0;
+    static int answer = 0;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-
-        board = new int[N][N];
-        placed = new boolean[N][N];
-
-        find(0);
-        System.out.println(result);
+    public static boolean check(int curRow) {
+        for (int i = 0; i < curRow; i++) {
+            // 같은 열에 있는지 확인
+            if (arr[curRow] == arr[i]) {
+                return false;
+            }
+            // 대각선 위치에 있는지 확인
+            // 두 칸이 각각 (x1, y1), (x2, y2) 좌표를 가질 때
+            // |x1-x2| == |y1-y2| 이면 대각선에 있는 것이므로 false 반환
+            else if(Math.abs(curRow-i) == Math.abs(arr[curRow]-arr[i])) {
+                return false;
+            }
+        }
+        return true;
     }
+    // arr = [2, 0, 1, 4] -> arr : (0,2) (1,0) (2,1) (3,4)
 
-    static void find(int number) { //number은 체스말을 얼마나 넣었는지
-        if (number == N) {
-            result++;
+    public static void backtrack(int depth) {
+        if (depth == N) {
+            answer++;
             return;
         }
 
-
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (possible(i, j)) { //queen이 놓여져있지 않고, 다른 queen에 의해 잡히지 않는 곳이라면
-                    placed[i][j] = true; //queen을 놓고
-
-                    //queen을 놓고 number을 증가시켜 재귀
-                    find(number + 1);
-
-                    placed[i][j] = false; //놓은 queen을 되돌린다
-                }
+            arr[depth] = i; // depth 가 현재 검색하고있는 행
+            // 현재 검색하고 있는 행의 퀸의 자리 (열번호)를 담고 있음.
+            if (check(depth)) {
+                backtrack(depth + 1);
             }
         }
-
     }
 
-    static boolean possible(int x, int y) {
-        //queen이 놓여진 체스판 placed와 x, y를 비교하여 말을 놓을 수 있는 자리인지 파악
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+        N = Integer.parseInt(str);
+        arr = new int[N]; //어차피 각 행에는 queen이 1개밖에 들어가지 않으므로 index를 행으로, index에 해당하는 숫자를 열로 사용한다
 
-        //마지막으로 queen이 놓여진 부분보다 x,y가 커야함
-        Integer queenX = null;
-        Integer queenY = null;
-
-        loop1:
-        for (int i = N - 1; i >= 0; i--) {
-            for (int j = N - 1; j >= 0; j--) {
-                if (placed[i][j]) {
-                    queenX = i;
-                    queenY = j;
-                    break loop1;
-                }
-            }
-        }
-
-        if (queenX != null) {
-            if (x < queenX) {
-                return false;
-            }
-            else if (x == queenX){
-                if (y < queenY) {
-                    return false;
-                }
-            }
-        }
-
-        for (int i = 0; i < N; i++) {
-            if (placed[x][i]) {
-                return false;
-            }
-        }
-        for (int i = 0; i < N; i++) {
-            if (placed[i][y]) {
-                return false;
-            }
-        }
-
-
-        //대각
-        for (int i = 0; i < N; i++) {
-            if (x - i >= 0 && y - i >= 0) {
-                if (placed[x - i][y - i]) {
-                    return false;
-                }
-            }
-            if (y + i < N && x - i >= 0) {
-                if (placed[x - i][y + i]) {
-                    return false;
-                }
-            }
-            if (x + i < N && y - i >= 0) {
-                if (placed[x + i][y - i]) {
-                    return false;
-                }
-            }
-            if (x + i < N && y + i < N) {
-                if (placed[x + i][y + i]) {
-                    return false;
-                }
-            }
-
-        }
-
-
-        return true;
-
-        
-        //queen과 같은 x, y면 안됨
-        //queen과 대각에 놓여있으면 안됨
-
+        backtrack(0);
+        System.out.println(answer);
     }
 }
+
