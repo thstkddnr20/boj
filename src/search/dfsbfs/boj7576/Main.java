@@ -6,41 +6,46 @@ public class Main {
     static int M;
     static int N;
     static int[][] tomato;
-    static List<Queue<Pair>> list;
+    static int[][] distance;
+    static Queue<Pair> queue = new ArrayDeque<>();
     static int result;
+
+    static int[] dx = {0, 0, -1, 1};
+    static int[] dy = {-1, 1, 0, 0};
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         M = sc.nextInt(); //가로
         N = sc.nextInt(); //세로
 
-        list = new ArrayList<>();
         tomato = new int[N][M];
+        distance = new int[N][M];
+
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 int i1 = sc.nextInt();
                 if (i1 == 1) {
-                    Queue<Pair> queue = new ArrayDeque<>();
                     queue.add(new Pair(j, i));
-                    list.add(queue);
                 }
                 tomato[i][j] = i1;
             }
         }
 
-        if (list.isEmpty()) {
-            //1이 나오지 않았다는 것
-            System.out.println(-1);
-            System.exit(0);
-        }
         bfs();
 
-        // bfs를 완료 후 0이 남아있는것을 확인
+        // bfs 완료 후 distance 확인하여 result 갱신
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                result = Math.max(result, distance[i][j]);
+            }
+        }
+
+        // bfs를 완료 후 익을 수 있는 토마토인데 막혀서 distance가 0인 것 확인
         loop:
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                if (tomato[i][j] == 0) {
+                if (tomato[i][j] == 0 && distance[i][j] == 0) {
                     result = -1;
                     break loop;
                 }
@@ -50,71 +55,27 @@ public class Main {
     }
 
     static void bfs() {
-        while (!list.isEmpty()) {
-            List<Integer> removeIndex = new ArrayList<>();
-            int tomatoCount = 0;
-            for (int j = 0; j < list.size(); j++) {
+        while (!queue.isEmpty()) {
+            Pair poll = queue.poll();
+            int x = poll.x;
+            int y = poll.y;
 
-                Queue<Pair> queue = list.get(j);
-                int queueSize = queue.size();
+            for (int i = 0; i < dx.length; i++) {
+                //queue에서 꺼내진 값에서 상하좌우 비교
+                int nx = x + dx[i];
+                int ny = y + dy[i];
 
-                for (int i = 0; i < queueSize; i++) {
-                    Pair poll = queue.poll();
-                    int x = poll.x;
-                    int y = poll.y;
-
-                    //상
-                    if (y - 1 >= 0) {
-                        if (tomato[y - 1][x] == 0) {
-                            queue.add(new Pair(x, y - 1));
-                            tomato[y - 1][x] = 1;
-                            tomatoCount++;
-                        }
-                    }
-
-                    //하
-                    if (y + 1 < N) {
-                        if (tomato[y + 1][x] == 0) {
-                            queue.add(new Pair(x, y + 1));
-                            tomato[y + 1][x] = 1;
-                            tomatoCount++;
-                        }
-                    }
-
-                    //좌
-                    if (x - 1 >= 0) {
-                        if (tomato[y][x - 1] == 0) {
-                            queue.add(new Pair(x - 1, y));
-                            tomato[y][x - 1] = 1;
-                            tomatoCount++;
-                        }
-                    }
-
-                    //우
-                    if (x + 1 < M) {
-                        if (tomato[y][x + 1] == 0) {
-                            queue.add(new Pair(x + 1, y));
-                            tomato[y][x + 1] = 1;
-                            tomatoCount++;
-                        }
+                //tomato[y][x], Pair(x, y)이다
+                if (0 <= nx && nx < M && 0 <= ny && ny < N) {
+                    //익을수 있는 토마토인가 && distance가 0으로 bfs를 돌지 않은 곳인가
+                    if (tomato[ny][nx] == 0 && distance[ny][nx] == 0) {
+                        queue.add(new Pair(nx, ny));
+                        //이전 거리에 +1을 하여 distance 갱신
+                        distance[ny][nx] = distance[y][x] + 1;
                     }
                 }
+            }
 
-                //queue에 들어갈 수 있는 안익은 토마토가 없으면 queue를 null할당
-                if (queue.isEmpty()) {
-                    removeIndex.add(j);
-                    break;
-                }
-
-            }
-            removeIndex.sort(Comparator.reverseOrder());
-            for (Integer index : removeIndex) {
-                int toInt = index;
-                list.remove(toInt);
-            }
-            if (tomatoCount != 0) {
-                result++;
-            }
         }
 
     }
