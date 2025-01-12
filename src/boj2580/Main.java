@@ -98,21 +98,23 @@ public class Main {
             }
 
             //열, 행 검사
-            Set<Integer> row = new HashSet<>();
-            Set<Integer> column = new HashSet<>();
-            Set<Integer> square = new HashSet<>();
+            Set<Integer> find = new HashSet<>();
             for (int i = 1; i < 10; i++) {
                 if (board[y][i] != 0) {
-                    if (!row.contains(board[y][i])) {
-                        row.add(board[y][i]);
+                    if (!find.contains(board[y][i])) {
+                        find.add(board[y][i]);
                     }
                     else {
                         return true;
                     }
                 }
+            }
+            find.clear();
+
+            for (int i = 1; i < 10; i++) {
                 if (board[i][x] != 0) {
-                    if (!column.contains(board[i][x])) {
-                        column.add(board[i][x]);
+                    if (!find.contains(board[i][x])) {
+                        find.add(board[i][x]);
                     }
                     else {
                         return true;
@@ -120,13 +122,15 @@ public class Main {
                 }
             }
 
+            find.clear();
+
             //사각형 검사
             int[] xy = findSquareStartXY(x, y);
             for (int j = xy[1]; j < xy[1] + 3; j++) {
                 for (int k = xy[0]; k < xy[0] + 3; k++) {
                     if (board[j][k] != 0) {
-                        if (!square.contains(board[j][k])) {
-                            square.add(board[j][k]);
+                        if (!find.contains(board[j][k])) {
+                            find.add(board[j][k]);
                         }
                         else {
                             return true;
@@ -138,17 +142,15 @@ public class Main {
         return false;
     }
 
-    static Set<Integer> findPossible(int x, int y) {
+    static Set<Integer> findPossible(int x, int y) { //0에 들어갈 수 있는 값을 찾는 메서드
         Set<Integer> set = new HashSet<>();
 
         //열, 행 검사
-        List<Integer> row = new ArrayList<>();
-        List<Integer> column = new ArrayList<>();
-        List<Integer> square = new ArrayList<>();
+        Set<Integer> findAll = new HashSet<>();
 
         for (int i = 1; i < 10; i++) {
-            row.add(board[y][i]);
-            column.add(board[i][x]);
+            findAll.add(board[y][i]);
+            findAll.add(board[i][x]);
         }
 
         //사각형 검사
@@ -157,18 +159,12 @@ public class Main {
         int startY = xy[1];
         for (int i = startY; i < startY + 3; i++) {
             for (int j = startX; j < startX + 3; j++) {
-                square.add(board[i][j]);
+                findAll.add(board[i][j]);
             }
         }
 
         for (int i : fullRange) {
-            if (!row.contains(i)) {
-                set.add(i);
-            }
-            if (!column.contains(i)) {
-                set.add(i);
-            }
-            if (!square.contains(i)) {
+            if (!findAll.contains(i)) {
                 set.add(i);
             }
         }
