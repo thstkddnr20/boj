@@ -31,7 +31,7 @@ public class BacktrackingMain {
             }
         }
 
-        alphabetValue = new int[arr.size()]; //가중치를 담을 배열 할당
+        alphabetValue = new int[arr.size()]; //가중치를 담을 배열 할당, 각각의 arr의 인덱스에 맞는 배열이므로 arr.size()로 생성
 
         recursion(0);
         System.out.println(max);
@@ -63,4 +63,19 @@ public class BacktrackingMain {
             }
         }
     }
+
+    /**
+     * ex)
+     * 2
+     * AAA
+     * AAA
+     *
+     * arr = [A]
+     * alphabetValue.size() = arr.size() = 1
+     * alphabetValue의 0번째에 0~9까지 반복문으로 들어가게 됨
+     *
+     * 종료조건에서 arr.indexOf(A) = 0 이므로 alphabetValue의 0번째만 호출됨
+     * sum = 0, 111 + 111 = 222, 222 + 222 = 444, 666 ~ 999 + 999 인 1998까지 갱신됨
+     * Math.max에 의해서 max값이 최종적으로 1998로 할당
+     */
 }
