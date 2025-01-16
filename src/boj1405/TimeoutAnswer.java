@@ -1,8 +1,10 @@
 package boj1405;
 
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
-public class Main {
+public class TimeoutAnswer {
     static int N;
     //지났던 길 저장
     static int[] way;
@@ -14,7 +16,7 @@ public class Main {
 
     static double result;
 
-    static boolean[][] visited = new boolean[50][50];
+    static Set<String> visited = new HashSet<>();
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -30,8 +32,8 @@ public class Main {
             System.exit(0);
         }
 
-        visited[N][N] = true;
-        find(0, N, N, 1);
+        visited.add("0,0");
+        find(0, 0, 0, 1);
         System.out.println(result);
 
     }
@@ -60,11 +62,13 @@ public class Main {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (!visited[nx][ny]) {
+            String s = nx + "," + ny;
+
+            if (!visited.contains(s)) {
                 way[depth] = i;
-                visited[nx][ny] = true;
+                visited.add(s);
                 find(depth + 1, nx, ny, total * percent[i]);
-                visited[nx][ny] = false;
+                visited.remove(s);
             }
 
         }
