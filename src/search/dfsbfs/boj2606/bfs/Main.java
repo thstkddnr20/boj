@@ -1,10 +1,9 @@
-package boj2606.dfs;
+package search.dfsbfs.boj2606.bfs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -33,17 +32,17 @@ public class Main {
         }
 
         Node root = nodes[1];
-        Stack<Node> stack = new Stack<>();
+        Queue<Node> queue = new LinkedList<>();
         int count = 0;
-        stack.push(root);
+        queue.add(root);
         root.marked = true;
-        while (!stack.isEmpty()) {
-            Node r = stack.pop();
+        while (!queue.isEmpty()) {
+            Node r = queue.remove();
             count++;
             for (Node n : r.adjacent) {
                 if (n.marked == false) {
                     n.marked = true;
-                    stack.push(n);
+                    queue.add(n);
                 }
             }
         }
